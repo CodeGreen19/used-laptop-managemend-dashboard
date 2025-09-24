@@ -11,6 +11,8 @@ export async function createVendor(input: VendorSchemaType) {
     .from(vendors)
     .where(eq(vendors.name, input.name));
 
+  console.log(input);
+
   if (exist.length) {
     return { message: "Store name already exist" };
   }
@@ -25,12 +27,20 @@ export async function updateVendor({
   input: VendorSchemaType;
   id: string;
 }) {
-  const exist = await db
+  const [originalStore] = await db
+    .select()
+    .from(vendors)
+    .where(eq(vendors.id, id));
+  if (!originalStore) {
+    return { message: "Vendor doesn't exist!" };
+  }
+
+  const [exist] = await db
     .select()
     .from(vendors)
     .where(eq(vendors.name, input.name));
 
-  if (exist.length) {
+  if (exist && exist.name !== originalStore.name) {
     return { message: "Store name already exist" };
   }
   await db.update(vendors).set(input).where(eq(vendors.id, id));

@@ -22,7 +22,7 @@ export default function UpdateVendorForm({
       name: data.name,
       phone: data.phone ?? "",
       address: data.address ?? "",
-      note: data.notes ?? "",
+      notes: data.notes ?? "",
     },
   });
 
@@ -35,7 +35,8 @@ export default function UpdateVendorForm({
         form={form}
         input="text"
         name="name"
-        placeHolder="Vendor's name *"
+        placeHolder="Vendor's name"
+        required
       />
       <CustomFormField<VendorSchemaShape>
         form={form}
@@ -51,8 +52,8 @@ export default function UpdateVendorForm({
       />
       <CustomFormField<VendorSchemaShape>
         form={form}
-        input="text"
-        name="note"
+        input="textarea"
+        name="notes"
         placeHolder="Keep a note"
       />
       <CustomFormActionButtons<VendorSchemaShape>

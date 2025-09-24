@@ -1,4 +1,6 @@
+import { relations } from "drizzle-orm";
 import { pgTable, uuid, varchar, text, timestamp } from "drizzle-orm/pg-core";
+import { products } from "./product";
 
 export const vendors = pgTable("vendors", {
   id: uuid().primaryKey().defaultRandom(),
@@ -8,3 +10,7 @@ export const vendors = pgTable("vendors", {
   notes: text("notes"),
   createdAt: timestamp("created_at").defaultNow(),
 });
+
+export const vendorsRelation = relations(vendors, ({ many }) => ({
+  products: many(products),
+}));

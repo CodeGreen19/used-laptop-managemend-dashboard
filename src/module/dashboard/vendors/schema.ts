@@ -4,7 +4,7 @@ export const vendorSchema = z.object({
   name: z.string().min(1, "Name is required").max(100, "Name is too big"),
   phone: z.string(),
   address: z.string(),
-  note: z.string(),
+  notes: z.string(),
 });
 
 export type VendorSchemaType = z.infer<typeof vendorSchema>;

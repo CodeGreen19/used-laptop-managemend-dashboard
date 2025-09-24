@@ -17,15 +17,18 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import React from "react";
 
 type CustomTableFilterBoxType<TData> = {
   table: Table<TData>;
   searchBy: string;
+  headerFilterComponent?: React.JSX.Element;
 };
 
 export function CustomTableHeader<TData>({
   table,
   searchBy,
+  headerFilterComponent,
 }: CustomTableFilterBoxType<TData>) {
   return (
     <div className="flex items-center justify-between mb-2">
@@ -44,7 +47,7 @@ export function CustomTableHeader<TData>({
               Views <Camera />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="start">
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())
@@ -64,6 +67,7 @@ export function CustomTableHeader<TData>({
               })}
           </DropdownMenuContent>
         </DropdownMenu>
+        {headerFilterComponent}
       </section>
       <div className="flex gap-1 self-end">
         <Button variant={"ghost"}>

@@ -29,12 +29,14 @@ interface CustomTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   searchBy: string;
+  headerFilterComponent?: React.JSX.Element;
 }
 
 export function CustomTable<TData, TValue>({
   columns,
   data,
   searchBy,
+  headerFilterComponent,
 }: CustomTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -62,9 +64,13 @@ export function CustomTable<TData, TValue>({
   return (
     <section>
       <div>
-        <CustomTableHeader searchBy={searchBy} table={table} />
+        <CustomTableHeader
+          headerFilterComponent={headerFilterComponent}
+          searchBy={searchBy}
+          table={table}
+        />
       </div>
-      <div className="overflow-hidden rounded-md border">
+      <div className=" rounded-md border w-full">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -107,7 +113,7 @@ export function CustomTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  No Data to show!
                 </TableCell>
               </TableRow>
             )}

@@ -9,38 +9,39 @@ import {
   SortableButton,
   TableActionButton,
 } from "@/components/shared/custom-table-column-element";
-import { getVendorsInfo } from "../vendor.action";
-import UpdateVendorForm from "./update-vendor-form";
-import DeleteVendorForm from "./delete-vendor-form";
-import VendorDetailInfo from "./vendor-detail-info";
+import { getProdutsInfo } from "../product.action";
+import VendorFilterInput from "./vendor-filter-input";
+import UpdateProductForm from "./update-product-form";
+import DeleteProductForm from "./delete-product-form";
+import { useProductStore } from "../use-product-store";
 
-type DataType = Awaited<ReturnType<typeof getVendorsInfo>>;
-type SingleDataType = DataType[number];
+type DataType = Awaited<ReturnType<typeof getProdutsInfo>>;
+type SingleDataType = DataType["allProducts"][number];
 
 const columns: ColumnDef<SingleDataType>[] = [
   selectColumn(),
   {
-    accessorKey: "name",
+    accessorKey: "brand",
     header: ({ column }) => {
-      return <SortableButton column={column} title="Name" />;
+      return <SortableButton column={column} title="Brand" />;
     },
   },
   {
-    accessorKey: "phone",
+    accessorKey: "model",
     header: ({ column }) => {
-      return <SortableButton column={column} title="Phone No." />;
+      return <SortableButton column={column} title="Model" />;
     },
   },
   {
-    accessorKey: "address",
+    accessorKey: "condition",
     header: ({ column }) => {
-      return <SortableButton column={column} title="Address" />;
+      return <SortableButton column={column} title="Condition" />;
     },
   },
   {
-    accessorKey: "notes",
+    accessorKey: "status",
     header: ({ column }) => {
-      return <SortableButton column={column} title="Notes" />;
+      return <SortableButton column={column} title="Status" />;
     },
   },
   {
@@ -65,20 +66,21 @@ const columns: ColumnDef<SingleDataType>[] = [
             {
               text: "Edit",
               type: "sheet",
-              component: <UpdateVendorForm data={props.row.original} />,
+              component: (
+                <UpdateProductForm
+                  id={props.row.original.id}
+                  info={props.row.original}
+                />
+              ),
             },
-            {
-              text: "More info",
-              type: "dialog",
-              component: <VendorDetailInfo />,
-            },
+
             {
               text: "Delete",
               type: "dialog",
               component: (
-                <DeleteVendorForm
+                <DeleteProductForm
                   id={props.row.original.id}
-                  name={props.row.original.name}
+                  brandName={props.row.original.brand}
                 />
               ),
             },
@@ -89,14 +91,23 @@ const columns: ColumnDef<SingleDataType>[] = [
   },
 ];
 export default function DataTable() {
+  const { selectedVendor } = useProductStore();
   const { data } = useSuspenseQuery({
-    queryKey: ["vendors"],
-    queryFn: () => getVendorsInfo(),
+    queryKey: ["products"],
+    queryFn: () => getProdutsInfo(),
   });
 
+  const filteredProducts = selectedVendor
+    ? data.allProducts.filter((item) => item.vendorId === selectedVendor.id)
+    : null;
   return (
     <div className="mt-3">
-      <CustomTable searchBy={"name"} columns={columns} data={data} />
+      <CustomTable
+        searchBy={"model"}
+        columns={columns}
+        data={filteredProducts ?? data.allProducts}
+        headerFilterComponent={<VendorFilterInput info={data.allVendors} />}
+      />
     </div>
   );
 }

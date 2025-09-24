@@ -70,16 +70,23 @@ function SortableButton<Tdata>({
   );
 }
 
-type TableActionsButton = {
-  EditComponent: React.JSX.Element;
-  DeleteComponent: React.JSX.Element;
+type TableActionsCompType = {
+  type: "sheet" | "dialog";
+  text: string;
+  component: React.JSX.Element;
 };
+
 function TableActionButton({
-  DeleteComponent,
-  EditComponent,
-}: TableActionsButton) {
-  const [editOpen, setEditOpen] = useState<boolean>(false);
-  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  conponentInfo,
+}: {
+  conponentInfo: TableActionsCompType[];
+}) {
+  const [sheetOpen, setSheetOpen] = useState<boolean>(false);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [selectedComp, setSelectedComp] = useState<React.JSX.Element | null>(
+    null
+  );
+
   return (
     <div className="flex justify-end">
       <DropdownMenu>
@@ -91,24 +98,35 @@ function TableActionButton({
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => setEditOpen(true)}>
-            Edit
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setDeleteOpen(true)}>
-            Delete
-          </DropdownMenuItem>
+          {conponentInfo.map((item) => (
+            <DropdownMenuItem
+              key={item.text}
+              onClick={() => {
+                setSelectedComp(item.component);
+                if (item.type === "dialog") {
+                  setDialogOpen(true);
+                } else {
+                  setSheetOpen(true);
+                }
+              }}
+            >
+              {item.text}
+            </DropdownMenuItem>
+          ))}
         </DropdownMenuContent>
       </DropdownMenu>
 
       <SheetComp
-        open={editOpen}
-        setOpen={setEditOpen}
-        Component={EditComponent}
+        open={sheetOpen}
+        setOpen={setSheetOpen}
+        Component={selectedComp}
+        cleanUpAdditionalComponent={() => setSelectedComp(null)}
       />
       <DialogComp
-        open={deleteOpen}
-        setOpen={setDeleteOpen}
-        Component={DeleteComponent}
+        open={dialogOpen}
+        setOpen={setDialogOpen}
+        Component={selectedComp}
+        cleanUpAdditionalComponent={() => setSelectedComp(null)}
       />
     </div>
   );
@@ -118,13 +136,26 @@ export function DialogComp({
   Component,
   open,
   setOpen,
+  cleanUpAdditionalComponent,
 }: {
   open: boolean;
   setOpen: (e: boolean) => void;
-  Component: React.JSX.Element;
+  Component: React.JSX.Element | null;
+  cleanUpAdditionalComponent?: () => void;
 }) {
   return (
-    <Dialog open={open} onOpenChange={(e) => setOpen(e)}>
+    <Dialog
+      open={open}
+      onOpenChange={(e) => {
+        if (e === false) {
+          cleanUpAdditionalComponent &&
+            setTimeout(() => {
+              cleanUpAdditionalComponent();
+            }, 400);
+        }
+        setOpen(e);
+      }}
+    >
       <form>
         <DialogTrigger asChild>
           <Button className="hidden" variant="outline"></Button>
@@ -144,13 +175,26 @@ export function SheetComp({
   Component,
   open,
   setOpen,
+  cleanUpAdditionalComponent,
 }: {
   open: boolean;
   setOpen: (e: boolean) => void;
-  Component: React.JSX.Element;
+  Component: React.JSX.Element | null;
+  cleanUpAdditionalComponent?: () => void;
 }) {
   return (
-    <Sheet open={open} onOpenChange={(e) => setOpen(e)}>
+    <Sheet
+      open={open}
+      onOpenChange={(e) => {
+        if (e === false) {
+          cleanUpAdditionalComponent &&
+            setTimeout(() => {
+              cleanUpAdditionalComponent();
+            }, 400);
+        }
+        setOpen(e);
+      }}
+    >
       <SheetTrigger asChild>
         <Button className="hidden" variant="outline"></Button>
       </SheetTrigger>

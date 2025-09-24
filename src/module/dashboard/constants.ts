@@ -20,3 +20,15 @@ export const SideBarData = {
     },
   ],
 };
+
+export const productStatuses = ["Available", "Reserved", "Sold"] as const;
+export const conditions = ["Excellent", "Good", "Fair", "Poor"] as const;
+export const paymentStatuses = ["Paid", "Pending", "Partial"] as const;
+export const paymentMethods = ["Cash", "Card", "Bank"] as const;
+export const expenseTypes = ["Salary", "Rent", "Utility", "Misc"] as const;
+export const repairStatuses = [
+  "Pending",
+  "In-progress",
+  "Completed",
+  "Delivered",
+] as const;

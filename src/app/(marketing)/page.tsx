@@ -1,5 +1,4 @@
-import MarketingLoginPage from "@/module/marketing/pages/marketing-login-page";
-import React from "react";
+import MarketingLoginPage from "@/module/marketing/components/marketing-login-page";
 
 export default function page() {
   return <MarketingLoginPage />;

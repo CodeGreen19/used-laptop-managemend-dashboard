@@ -10,7 +10,7 @@ export default function VendorsPage() {
   return (
     <section>
       <SectionHeader
-        AddNewFormComponent={AddVendorForm}
+        AddNewFormComponent={<AddVendorForm />}
         addNewFormHeading="Add new vendor"
         buttonText="Add Vendor"
       />

@@ -16,7 +16,7 @@ export default function AddVendorForm() {
       name: "",
       phone: "",
       address: "",
-      note: "",
+      notes: "",
     },
   });
 
@@ -29,7 +29,8 @@ export default function AddVendorForm() {
         form={form}
         input="text"
         name="name"
-        placeHolder="Vendor's name *"
+        placeHolder="Vendor's name"
+        required
       />
       <CustomFormField<VendorSchemaShape>
         form={form}
@@ -45,8 +46,8 @@ export default function AddVendorForm() {
       />
       <CustomFormField<VendorSchemaShape>
         form={form}
-        input="text"
-        name="note"
+        input="textarea"
+        name="notes"
         placeHolder="Keep a note"
       />
       <CustomFormActionButtons<VendorSchemaShape>
