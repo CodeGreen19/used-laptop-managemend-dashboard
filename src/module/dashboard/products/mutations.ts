@@ -1,7 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { createProduct, deleteProduct, updateProduct } from "./product.action";
+import {
+  createProduct,
+  deleteProduct,
+  sellProduct,
+  updateProduct,
+} from "./product.action";
 import { ProductSchemaType } from "./schema";
+import { SellProductInfoType } from "./types";
 
 export const productMutation = {
   useCreate: () => {
@@ -23,6 +29,20 @@ export const productMutation = {
     return useMutation({
       mutationFn: async (info: { input: ProductSchemaType; id: string }) => {
         return await updateProduct(info);
+      },
+
+      onSuccess: ({ message }) => {
+        toast.success(message);
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
+  },
+  useSellProduct: () => {
+    return useMutation({
+      mutationFn: async (info: SellProductInfoType) => {
+        return await sellProduct(info);
       },
 
       onSuccess: ({ message }) => {

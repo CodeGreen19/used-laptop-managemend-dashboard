@@ -8,22 +8,22 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { vendors } from "./vendor";
+import { customers } from "./customer";
 
 export const products = pgTable("products", {
   id: uuid("id").primaryKey().defaultRandom(),
   brand: varchar("brand", { length: 50 }).notNull(),
   model: varchar("model", { length: 100 }).notNull(),
   condition: varchar("condition", { length: 20 }).notNull().default("good"), // from conditions[]
-  status: varchar("status", { length: 20 }).notNull().default("available"), // from laptopStatuses[]
+  status: varchar("status", { length: 20 }).notNull().default("Available"), // from laptopStatuses[]
   specs: text("specs"), // JSON string or plain text for CPU, RAM, etc.
   purchasePrice: decimal("purchase_price", {
     precision: 10,
-    scale: 2,
   }).notNull(),
   importingExpenses: varchar("importing_expenses", { length: 50 }),
-  sellingPrice: decimal("selling_price", { precision: 10, scale: 2 }),
-  soldPrice: decimal("sold_price", { precision: 10, scale: 2 }),
-  profit: decimal("profit", { precision: 10, scale: 2 }),
+  sellingPrice: decimal("selling_price", { precision: 10 }),
+  soldPrice: decimal("sold_price", { precision: 10 }),
+  profit: decimal("profit", { precision: 10 }),
   purchaseDate: timestamp("purchase_date").defaultNow(),
   soldDate: timestamp("sold_date"),
   vendorId: uuid("vendor_id")
@@ -31,9 +31,9 @@ export const products = pgTable("products", {
     .references(() => vendors.id, {
       onDelete: "set null",
     }),
-  //   customerId: integer("customer_id").references(() => customers.id, {
-  //     onDelete: "set null",
-  //   }),
+  customerId: uuid("customer_id").references(() => customers.id, {
+    onDelete: "set null",
+  }),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
 });
@@ -42,5 +42,9 @@ export const productsRelation = relations(products, ({ one }) => ({
   vendor: one(vendors, {
     fields: [products.vendorId],
     references: [vendors.id],
+  }),
+  customer: one(customers, {
+    fields: [products.customerId],
+    references: [customers.id],
   }),
 }));

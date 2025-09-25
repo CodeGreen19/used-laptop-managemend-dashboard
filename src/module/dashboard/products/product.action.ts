@@ -4,6 +4,7 @@ import { products, vendors } from "@/drizzle/schema";
 import { desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { ProductSchemaType } from "./schema";
+import { SellProductInfoType } from "./types";
 
 export async function createProduct(input: ProductSchemaType) {
   await db.insert(products).values(input);
@@ -31,6 +32,19 @@ export async function deleteProduct({ id }: { id: string }) {
   await db.delete(products).where(eq(products.id, id));
   revalidatePath("/dashboard/products");
   return { message: "Product is deleted" };
+}
+
+export async function sellProduct(info: SellProductInfoType) {
+  await db
+    .update(products)
+    .set({
+      customerId: info.customerId,
+      soldPrice: info.soldPrice,
+      soldDate: new Date(),
+    })
+    .where(eq(products.id, info.productId));
+  revalidatePath("/dashboard/products");
+  return { message: "Product is Sold" };
 }
 
 export async function getProdutsInfo() {

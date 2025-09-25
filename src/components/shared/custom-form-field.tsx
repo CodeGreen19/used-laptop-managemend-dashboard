@@ -114,7 +114,7 @@ export function CustomFormField<T extends ZodRawShape>({
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
-                        selected={new Date()}
+                        selected={undefined}
                         onSelect={safeField.onChange}
                       />
                     </PopoverContent>

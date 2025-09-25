@@ -5,7 +5,7 @@ import { CustomFormField } from "@/components/shared/custom-form-field";
 import { CustomFormWrapper } from "@/components/shared/custom-form-wrapper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { conditions, productStatuses } from "../../constants";
+import { conditions } from "../../constants";
 import { productMutation } from "../mutations";
 import { getProdutsInfo } from "../product.action";
 import {
@@ -31,7 +31,6 @@ export default function UpdateProductForm({
       condition: info.condition,
       model: info.model,
       specs: info.specs ?? "",
-      status: info.status,
       purchasePrice: info.purchasePrice,
       importingExpenses: info.importingExpenses ?? "",
       purchaseDate: info.purchaseDate ?? null,
@@ -74,14 +73,7 @@ export default function UpdateProductForm({
         selectData={[...conditions]}
         required
       />
-      <CustomFormField<ProductSchemaShape>
-        form={form}
-        input="select"
-        name="status"
-        selectData={[...productStatuses]}
-        placeHolder="Product Status"
-        required
-      />
+
       <CustomFormField<ProductSchemaShape>
         form={form}
         input="number"
@@ -93,7 +85,7 @@ export default function UpdateProductForm({
         form={form}
         input="number"
         name="importingExpenses"
-        placeHolder="Importing consts"
+        placeHolder="Importing costs"
       />
       <CustomFormField<ProductSchemaShape>
         form={form}

@@ -1,19 +1,22 @@
 "use client";
 
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
 import { CustomTable } from "@/components/shared/custom-table";
 import {
   selectColumn,
   SortableButton,
   TableActionButton,
 } from "@/components/shared/custom-table-column-element";
+import { Badge } from "@/components/ui/badge";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { getProdutsInfo } from "../product.action";
-import VendorFilterInput from "./vendor-filter-input";
-import UpdateProductForm from "./update-product-form";
-import DeleteProductForm from "./delete-product-form";
 import { useProductStore } from "../use-product-store";
+import DeleteProductForm from "./delete-product-form";
+import ProductDetailInfo from "./product-detail-info";
+import SellProduct from "./sell-product";
+import UpdateProductForm from "./update-product-form";
+import VendorFilterInput from "./vendor-filter-input";
 
 type DataType = Awaited<ReturnType<typeof getProdutsInfo>>;
 type SingleDataType = DataType["allProducts"][number];
@@ -42,6 +45,22 @@ const columns: ColumnDef<SingleDataType>[] = [
     accessorKey: "status",
     header: ({ column }) => {
       return <SortableButton column={column} title="Status" />;
+    },
+    cell: (props) => {
+      const status = props.row.original.status;
+      return (
+        <Badge
+          variant={
+            status === "Available"
+              ? "outline"
+              : status === "Reserved"
+              ? "secondary"
+              : "destructive"
+          }
+        >
+          {status}
+        </Badge>
+      );
     },
   },
   {
@@ -79,6 +98,24 @@ const columns: ColumnDef<SingleDataType>[] = [
                 <UpdateProductForm
                   id={props.row.original.id}
                   info={props.row.original}
+                />
+              ),
+            },
+            {
+              text: "Detail info",
+              heading: "Detail info",
+
+              type: "sheet",
+              component: <ProductDetailInfo />,
+            },
+            {
+              text: "Sell",
+              type: "sheet",
+              heading: "Sell the product",
+              component: (
+                <SellProduct
+                  productId={props.row.original.id}
+                  soldStatus={props.row.original.soldPrice ? true : false}
                 />
               ),
             },

@@ -1,18 +1,17 @@
 "use client";
 
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
 import { CustomTable } from "@/components/shared/custom-table";
 import {
   selectColumn,
   SortableButton,
   TableActionButton,
 } from "@/components/shared/custom-table-column-element";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { getVendorsInfo } from "../vendor.action";
-import UpdateVendorForm from "./update-vendor-form";
 import DeleteVendorForm from "./delete-vendor-form";
-import VendorDetailInfo from "./vendor-detail-info";
+import UpdateVendorForm from "./update-vendor-form";
 
 type DataType = Awaited<ReturnType<typeof getVendorsInfo>>;
 type SingleDataType = DataType[number];
@@ -67,11 +66,7 @@ const columns: ColumnDef<SingleDataType>[] = [
               type: "sheet",
               component: <UpdateVendorForm data={props.row.original} />,
             },
-            {
-              text: "More info",
-              type: "dialog",
-              component: <VendorDetailInfo />,
-            },
+
             {
               text: "Delete",
               type: "dialog",

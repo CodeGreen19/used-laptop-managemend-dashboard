@@ -7,7 +7,8 @@ import { getQueryClient } from "@/lib/tanstack-query-setup/get-query-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { conditions, productStatuses } from "../../constants";
+import { conditions } from "../../constants";
+import { productMutation } from "../mutations";
 import { getProdutsInfo } from "../product.action";
 import {
   productSchema,
@@ -16,7 +17,6 @@ import {
 } from "../schema";
 import { useProductStore } from "../use-product-store";
 import VendorFilterInput from "./vendor-filter-input";
-import { productMutation } from "../mutations";
 
 export default function AddProductForm() {
   const { mutate, isPending } = productMutation.useCreate();
@@ -30,7 +30,6 @@ export default function AddProductForm() {
       condition: "",
       model: "",
       specs: "",
-      status: "",
       purchasePrice: "",
       importingExpenses: "",
       sellingPrice: "",
@@ -89,14 +88,7 @@ export default function AddProductForm() {
         selectData={[...conditions]}
         required
       />
-      <CustomFormField<ProductSchemaShape>
-        form={form}
-        input="select"
-        name="status"
-        selectData={[...productStatuses]}
-        placeHolder="Product Status"
-        required
-      />
+
       <CustomFormField<ProductSchemaShape>
         form={form}
         input="number"
@@ -108,7 +100,7 @@ export default function AddProductForm() {
         form={form}
         input="number"
         name="importingExpenses"
-        placeHolder="Importing consts"
+        placeHolder="Importing costs"
       />
       <CustomFormField<ProductSchemaShape>
         form={form}

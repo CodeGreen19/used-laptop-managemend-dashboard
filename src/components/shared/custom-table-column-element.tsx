@@ -74,6 +74,7 @@ type TableActionsCompType = {
   type: "sheet" | "dialog";
   text: string;
   component: React.JSX.Element;
+  heading?: string;
 };
 
 function TableActionButton({
@@ -86,6 +87,10 @@ function TableActionButton({
   const [selectedComp, setSelectedComp] = useState<React.JSX.Element | null>(
     null
   );
+
+  const selectedHeading =
+    conponentInfo.find((item) => item.component === selectedComp)?.heading ??
+    "";
 
   return (
     <div className="flex justify-end">
@@ -121,12 +126,14 @@ function TableActionButton({
         setOpen={setSheetOpen}
         Component={selectedComp}
         cleanUpAdditionalComponent={() => setSelectedComp(null)}
+        heading={selectedHeading}
       />
       <DialogComp
         open={dialogOpen}
         setOpen={setDialogOpen}
         Component={selectedComp}
         cleanUpAdditionalComponent={() => setSelectedComp(null)}
+        heading={selectedHeading}
       />
     </div>
   );
@@ -137,11 +144,13 @@ export function DialogComp({
   open,
   setOpen,
   cleanUpAdditionalComponent,
+  heading,
 }: {
   open: boolean;
   setOpen: (e: boolean) => void;
   Component: React.JSX.Element | null;
   cleanUpAdditionalComponent?: () => void;
+  heading?: string;
 }) {
   return (
     <Dialog
@@ -161,8 +170,8 @@ export function DialogComp({
           <Button className="hidden" variant="outline"></Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px] px-5">
-          <DialogHeader>
-            <DialogTitle>Are you sure ?</DialogTitle>
+          <DialogHeader className="p-0 py-4">
+            <DialogTitle>{heading || "Are you sure ?"}</DialogTitle>
           </DialogHeader>
           {Component}
         </DialogContent>
@@ -176,11 +185,13 @@ export function SheetComp({
   open,
   setOpen,
   cleanUpAdditionalComponent,
+  heading,
 }: {
   open: boolean;
   setOpen: (e: boolean) => void;
   Component: React.JSX.Element | null;
   cleanUpAdditionalComponent?: () => void;
+  heading?: string;
 }) {
   return (
     <Sheet
@@ -199,8 +210,8 @@ export function SheetComp({
         <Button className="hidden" variant="outline"></Button>
       </SheetTrigger>
       <SheetContent className="gap-0 px-5">
-        <SheetHeader>
-          <SheetTitle>Edit</SheetTitle>
+        <SheetHeader className="p-0 py-4">
+          <SheetTitle>{heading || "Edit"}</SheetTitle>
         </SheetHeader>
         {Component}
       </SheetContent>
