@@ -10,18 +10,26 @@ export const productSchema = z.object({
     .string()
     .min(1, "Model cannot be empty.")
     .max(100, "Model is too long."),
-
-  specs: z.string().optional(),
   condition: z.string().min(1, "Condition cannot be empty."),
+
+  status: z.string().min(1, "Status cannot be empty."),
+  specs: z.string().optional(),
   purchasePrice: z
     .string()
     .regex(
       /^\d+(\.\d{1,2})?$/,
       "Invalid purchase price format. Use up to 2 decimal places."
     ),
-  purchaseDate: z.date().optional(),
+  sellingPrice: z
+    .string()
+    .regex(
+      /^\d+(\.\d{1,2})?$/,
+      "Invalid purchase price format. Use up to 2 decimal places."
+    ),
+  importingExpenses: z.string().nullable(),
+
+  purchaseDate: z.date().nullable(),
   vendorId: z.string().min(1, "Selecting vendor is required"),
-  status: z.string().min(1, "Status cannot be empty."),
 });
 
 export type ProductSchemaType = z.infer<typeof productSchema>;

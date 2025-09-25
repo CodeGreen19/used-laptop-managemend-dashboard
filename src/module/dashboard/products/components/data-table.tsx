@@ -45,6 +45,15 @@ const columns: ColumnDef<SingleDataType>[] = [
     },
   },
   {
+    accessorKey: "sellingPrice",
+    header: ({ column }) => {
+      return <SortableButton column={column} title="Selling Price" />;
+    },
+    cell: (props) => {
+      return `${props.row.original.sellingPrice} ৳`;
+    },
+  },
+  {
     accessorKey: "createdAt",
     cell(props) {
       return (

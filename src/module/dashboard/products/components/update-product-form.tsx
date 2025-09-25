@@ -33,6 +33,9 @@ export default function UpdateProductForm({
       specs: info.specs ?? "",
       status: info.status,
       purchasePrice: info.purchasePrice,
+      importingExpenses: info.importingExpenses ?? "",
+      purchaseDate: info.purchaseDate ?? null,
+      sellingPrice: info.sellingPrice ?? "",
     },
   });
 
@@ -58,6 +61,13 @@ export default function UpdateProductForm({
       />
       <CustomFormField<ProductSchemaShape>
         form={form}
+        input="date"
+        name="purchaseDate"
+        placeHolder="Purchase date"
+        required
+      />
+      <CustomFormField<ProductSchemaShape>
+        form={form}
         input="select"
         name="condition"
         placeHolder="Product condition"
@@ -77,6 +87,19 @@ export default function UpdateProductForm({
         input="number"
         name="purchasePrice"
         placeHolder="Purchase amount"
+        required
+      />
+      <CustomFormField<ProductSchemaShape>
+        form={form}
+        input="number"
+        name="importingExpenses"
+        placeHolder="Importing consts"
+      />
+      <CustomFormField<ProductSchemaShape>
+        form={form}
+        input="number"
+        name="sellingPrice"
+        placeHolder="Expected selling amount"
         required
       />
       <CustomFormField<ProductSchemaShape>

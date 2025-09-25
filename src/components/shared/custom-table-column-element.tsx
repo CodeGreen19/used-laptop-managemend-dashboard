@@ -61,12 +61,12 @@ function SortableButton<Tdata>({
   title: string;
 }) {
   return (
-    <Button
-      variant={"ghost"}
+    <div
+      className="flex items-center gap-1 cursor-pointer"
       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
     >
-      {title} <ArrowUpDown />
-    </Button>
+      {title} <ArrowUpDown className="size-3" />
+    </div>
   );
 }
 
@@ -147,11 +147,11 @@ export function DialogComp({
     <Dialog
       open={open}
       onOpenChange={(e) => {
-        if (e === false) {
-          cleanUpAdditionalComponent &&
-            setTimeout(() => {
-              cleanUpAdditionalComponent();
-            }, 400);
+        //@ts-ingore
+        if (e === false && typeof cleanUpAdditionalComponent !== "undefined") {
+          setTimeout(() => {
+            cleanUpAdditionalComponent();
+          }, 400);
         }
         setOpen(e);
       }}

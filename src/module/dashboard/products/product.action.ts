@@ -17,7 +17,13 @@ export async function updateProduct({
   input: ProductSchemaType;
   id: string;
 }) {
-  await db.update(products).set(input).where(eq(products.id, id));
+  await db
+    .update(products)
+    .set({
+      ...input,
+    })
+    .where(eq(products.id, id));
+
   revalidatePath("/dashboard/products");
   return { message: "Product info updated" };
 }

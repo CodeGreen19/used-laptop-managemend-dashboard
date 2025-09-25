@@ -1,4 +1,4 @@
-import { Laptop, LayoutDashboardIcon, ShoppingCart } from "lucide-react";
+import { Laptop, LayoutDashboardIcon, ShoppingCart, Users } from "lucide-react";
 
 // This is sample data.
 export const SideBarData = {
@@ -17,6 +17,11 @@ export const SideBarData = {
       name: "Products",
       url: "/dashboard/products",
       icon: Laptop,
+    },
+    {
+      name: "Customers",
+      url: "/dashboard/customers",
+      icon: Users,
     },
   ],
 };

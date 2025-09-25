@@ -32,13 +32,18 @@ export default function AddProductForm() {
       specs: "",
       status: "",
       purchasePrice: "",
+      importingExpenses: "",
+      sellingPrice: "",
     },
   });
 
-  console.log(form.formState.errors);
-
   const onSubmit = (value: ProductSchemaType) => {
-    mutate(value, { onSuccess: () => form.reset() });
+    mutate(value, {
+      onSuccess: () => {
+        form.reset();
+        form.setValue("vendorId", selectedVendor ? selectedVendor.id : "");
+      },
+    });
   };
 
   const verdorId = form.watch("vendorId");
@@ -51,7 +56,7 @@ export default function AddProductForm() {
   }, [selectedVendor, form]);
   return (
     <CustomFormWrapper<ProductSchemaShape> form={form} onSubmit={onSubmit}>
-      <SelectedVendorSelect />
+      <SelectedVendorSelect className="w-full" />
       <p className="text-red-500 text-sm">
         {!verdorId && form.formState.errors.vendorId?.message}
       </p>
@@ -67,6 +72,13 @@ export default function AddProductForm() {
         input="text"
         name="model"
         placeHolder="Product model name"
+        required
+      />
+      <CustomFormField<ProductSchemaShape>
+        form={form}
+        input="date"
+        name="purchaseDate"
+        placeHolder="Purchase date"
         required
       />
       <CustomFormField<ProductSchemaShape>
@@ -94,6 +106,19 @@ export default function AddProductForm() {
       />
       <CustomFormField<ProductSchemaShape>
         form={form}
+        input="number"
+        name="importingExpenses"
+        placeHolder="Importing consts"
+      />
+      <CustomFormField<ProductSchemaShape>
+        form={form}
+        input="number"
+        name="sellingPrice"
+        placeHolder="Expected selling amount"
+        required
+      />
+      <CustomFormField<ProductSchemaShape>
+        form={form}
         input="textarea"
         name="specs"
         placeHolder="addition info such as : RAM , CPU, Battery ect."
@@ -107,11 +132,16 @@ export default function AddProductForm() {
   );
 }
 
-function SelectedVendorSelect() {
+function SelectedVendorSelect({ className }: { className?: string }) {
   const queryClient = getQueryClient();
   const data = queryClient.getQueryData(["products"]) as unknown as Awaited<
     ReturnType<typeof getProdutsInfo>
   >;
 
-  return <VendorFilterInput info={data ? data.allVendors : []} />;
+  return (
+    <VendorFilterInput
+      className={className}
+      info={data ? data.allVendors : []}
+    />
+  );
 }

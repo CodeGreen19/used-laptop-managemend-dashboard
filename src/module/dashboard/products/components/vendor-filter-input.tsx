@@ -13,11 +13,16 @@ import {
 import { CircleX } from "lucide-react";
 import { getProdutsInfo } from "../product.action";
 import { useProductStore } from "../use-product-store";
+import { cn } from "@/lib/utils";
 
 type VendorFilterInputType = {
   info: Awaited<ReturnType<typeof getProdutsInfo>>["allVendors"];
+  className?: string;
 };
-export default function VendorFilterInput({ info }: VendorFilterInputType) {
+export default function VendorFilterInput({
+  info,
+  className,
+}: VendorFilterInputType) {
   const { selectedVendor, setSelectedVendor } = useProductStore();
 
   return (
@@ -28,7 +33,7 @@ export default function VendorFilterInput({ info }: VendorFilterInputType) {
           setSelectedVendor(info.filter((item) => item.name === val)[0])
         }
       >
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className={cn("w-[180px]", className)}>
           <SelectValue placeholder="Select a vendor" />
         </SelectTrigger>
         <SelectContent>
