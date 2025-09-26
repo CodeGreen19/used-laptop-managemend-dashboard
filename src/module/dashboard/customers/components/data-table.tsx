@@ -12,6 +12,7 @@ import {
 import { getCustomersInfo } from "../customer.action";
 import UpdateCustomerForm from "./update-customer-form";
 import DeleteCustomerForm from "./delete-customer-form";
+import CustomerBoughtProductInfo from "./customer-bought-product-info";
 
 type DataType = Awaited<ReturnType<typeof getCustomersInfo>>;
 type SingleDataType = DataType[number];
@@ -28,6 +29,15 @@ const columns: ColumnDef<SingleDataType>[] = [
     accessorKey: "phone",
     header: ({ column }) => {
       return <SortableButton column={column} title="Phone No." />;
+    },
+  },
+  {
+    accessorKey: "products",
+    header: ({ column }) => {
+      return <SortableButton column={column} title="Own" />;
+    },
+    cell: (props) => {
+      return props.row.original.products.length;
     },
   },
   {
@@ -59,6 +69,14 @@ const columns: ColumnDef<SingleDataType>[] = [
               text: "Edit",
               type: "sheet",
               component: <UpdateCustomerForm data={props.row.original} />,
+            },
+            {
+              text: "Products",
+              type: "sheet",
+              heading: "Product Info",
+              component: (
+                <CustomerBoughtProductInfo info={props.row.original.products} />
+              ),
             },
 
             {

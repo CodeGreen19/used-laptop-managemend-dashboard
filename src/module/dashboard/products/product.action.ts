@@ -35,15 +35,33 @@ export async function deleteProduct({ id }: { id: string }) {
 }
 
 export async function sellProduct(info: SellProductInfoType) {
+  const [productInfo] = await db
+    .select({
+      purchasePrice: products.purchasePrice,
+      importingCost: products.importingExpenses,
+    })
+    .from(products)
+    .where(eq(products.id, info.productId));
+
+  const profit = Number(
+    Number(info.soldPrice) -
+      Number(
+        Number(productInfo.importingCost) + Number(productInfo.purchasePrice)
+      )
+  );
+
   await db
     .update(products)
     .set({
       customerId: info.customerId,
       soldPrice: info.soldPrice,
       soldDate: new Date(),
+      status: "Sold",
+      profit: profit.toString(),
     })
     .where(eq(products.id, info.productId));
   revalidatePath("/dashboard/products");
+  revalidatePath("/dashboard/customers");
   return { message: "Product is Sold" };
 }
 

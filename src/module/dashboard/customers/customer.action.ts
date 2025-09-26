@@ -1,7 +1,7 @@
 "use server";
 import { db } from "@/drizzle/db";
 import { customers } from "@/drizzle/schema";
-import { desc, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { CustomerSchemaType } from "./schema";
 
@@ -54,9 +54,19 @@ export async function deleteCustomer({ id }: { id: string }) {
   return { message: "Customer is deleted" };
 }
 export async function getCustomersInfo() {
-  const customersInfo = await db
-    .select()
-    .from(customers)
-    .orderBy(desc(customers.createdAt));
+  const customersInfo = await db.query.customers.findMany({
+    with: {
+      products: {
+        columns: {
+          id: true,
+          brand: true,
+          model: true,
+          soldPrice: true,
+          soldDate: true,
+        },
+      },
+    },
+  });
+
   return customersInfo;
 }

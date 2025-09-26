@@ -156,11 +156,8 @@ export function DialogComp({
     <Dialog
       open={open}
       onOpenChange={(e) => {
-        //@ts-ingore
-        if (e === false && typeof cleanUpAdditionalComponent !== "undefined") {
-          setTimeout(() => {
-            cleanUpAdditionalComponent();
-          }, 400);
+        if (!e && cleanUpAdditionalComponent) {
+          setTimeout(cleanUpAdditionalComponent, 400);
         }
         setOpen(e);
       }}

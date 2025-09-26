@@ -30,6 +30,7 @@ import { Input } from "@/components/ui/input";
 import { productMutation } from "../mutations";
 import { toast } from "sonner";
 import { SheetClose } from "@/components/ui/sheet";
+import { Badge } from "@/components/ui/badge";
 type CustomerType = { name: string; id: string };
 
 export default function SellProduct({
@@ -46,7 +47,7 @@ export default function SellProduct({
   const closeRef = useRef<HTMLButtonElement>(null);
   const [soldPrice, setSoldPrice] = useState<string>("");
   const queryClient = getQueryClient();
-  const { data, isPending, error } = useQuery({
+  const { data, isPending, error, refetch } = useQuery({
     queryKey: ["customer-Info"],
     queryFn: async () => {
       const data = queryClient.getQueryData(["customers"]) as Awaited<
@@ -66,6 +67,11 @@ export default function SellProduct({
   if (error) {
     return "Error";
   }
+
+  const customerName =
+    data.find((info) =>
+      info.products.some((product) => product.id === productId)
+    )?.name ?? "";
   return (
     <div>
       {!soldStatus && selectCustomer ? (
@@ -94,7 +100,12 @@ export default function SellProduct({
                   soldPrice,
                   productId,
                 },
-                { onSuccess: () => closeRef.current?.click() }
+                {
+                  onSuccess: () => {
+                    closeRef.current?.click();
+                    refetch();
+                  },
+                }
               );
             }}
           >
@@ -117,7 +128,7 @@ export default function SellProduct({
           />
         </div>
       ) : (
-        <SoldFinalized />
+        <SoldFinalized customerName={customerName} />
       )}
 
       <SheetClose ref={closeRef} className="hidden" />
@@ -166,12 +177,14 @@ export function CustomSelectionInput({
   );
 }
 
-function SoldFinalized() {
+function SoldFinalized({ customerName }: { customerName: string }) {
   return (
-    <div className="flex items-center justify-center h-[200px] border border-dashed">
+    <div className="flex items-center gap-2 flex-col justify-center h-[200px] border border-dashed">
       <Button variant={"ghost"}>
         This product is sold out <ClockFading />
       </Button>
+
+      <Badge variant={"outline"}>{customerName}</Badge>
     </div>
   );
 }

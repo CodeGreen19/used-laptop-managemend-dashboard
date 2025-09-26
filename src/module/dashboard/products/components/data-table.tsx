@@ -48,19 +48,7 @@ const columns: ColumnDef<SingleDataType>[] = [
     },
     cell: (props) => {
       const status = props.row.original.status;
-      return (
-        <Badge
-          variant={
-            status === "Available"
-              ? "outline"
-              : status === "Reserved"
-              ? "secondary"
-              : "destructive"
-          }
-        >
-          {status}
-        </Badge>
-      );
+      return <Badge variant={"outline"}>{status}</Badge>;
     },
   },
   {
@@ -106,7 +94,7 @@ const columns: ColumnDef<SingleDataType>[] = [
               heading: "Detail info",
 
               type: "sheet",
-              component: <ProductDetailInfo />,
+              component: <ProductDetailInfo info={props.row.original} />,
             },
             {
               text: "Sell",

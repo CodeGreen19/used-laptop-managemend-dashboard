@@ -26,7 +26,7 @@ export const SideBarData = {
   ],
 };
 
-export const productStatuses = ["Available", "Reserved", "Sold"] as const;
+export const productStatuses = ["Available", "Sold"] as const;
 export const conditions = ["Excellent", "Good", "Fair", "Poor"] as const;
 export const paymentStatuses = ["Paid", "Pending", "Partial"] as const;
 export const paymentMethods = ["Cash", "Card", "Bank"] as const;
